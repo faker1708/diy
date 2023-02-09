@@ -14,7 +14,7 @@ def synthetic_data(w, b, num_examples):  #@save
     y = torch.matmul(X, w) + b
 
     # 均值 ，方差
-    average = 1
+    average = 0
     aa = 4
     variance = 2**(-aa)
 
@@ -68,8 +68,9 @@ if __name__ == "__main__":
 
 
     # true_w = torch.tensor([2, -3.4])
-    true_w = torch.tensor([4.,2.,3.,1.])
-    true_b = 4.2
+    # true_w = torch.tensor([4.,2.,3.,1.])
+    true_w = torch.tensor([4.])
+    true_b = 5.
 
     # 输入 输出
     example_count = 2**8  #数据的个数
@@ -80,7 +81,7 @@ if __name__ == "__main__":
 
 
 
-    w = torch.normal(0, 0.01, size=(4,1), requires_grad=True)
+    w = torch.normal(0, 0.01, size=(1,1), requires_grad=True)
     b = torch.zeros(1, requires_grad=True)
 
 
