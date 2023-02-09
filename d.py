@@ -66,7 +66,7 @@ if __name__ == "__main__":
     true_b = 4.2
 
     # 输入 输出
-    example_count = 2**4  #数据的个数
+    example_count = 2**8  #数据的个数
     features, labels = synthetic_data(true_w, true_b, example_count)
 
     print('features:', features[0],'\nlabel:', labels[0])
@@ -93,7 +93,12 @@ if __name__ == "__main__":
 
     pa_count = 0
 
+    learn_count = 0 # 总计学习成本
+    lce = 0 
+    """有效学习成本"""
+
     for epoch in range(num_epochs):
+        learn_count = epoch
         for X, y in data_iter(batch_size, features, labels):
             l = loss(net(X, w, b), 
                                         y)  # X和y的小批量损失
@@ -117,6 +122,7 @@ if __name__ == "__main__":
             if(now_precision > max_precision):
                 # 学习有了进展
                 print(tlm)
+                lce = epoch
                 pa_count = 0 # 耐心恢复
                 max_precision = now_precision
                 print(now_precision)
@@ -136,8 +142,13 @@ if __name__ == "__main__":
             # print('.',end='')
             # print(train_l.mean())
 
-    print(tlm)
-    print(now_precision)
+    print("")
+    print("")
+    print("")
+    print("学习成本",learn_count)
+    print("有效学习成本",lce)
+    print("当前误差",tlm)
+    print("当前精度",now_precision)
     print("batch_size",batch_size)
     print(f'w的估计误差: {true_w - w.reshape(true_w.shape)}')
     print(f'b的估计误差: {true_b - b}')
