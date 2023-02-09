@@ -3,3 +3,11 @@
 这么聊，你可以去研究底层。但不要用c，不要用cuda
 就用py pytorch
 
+
+
+
+git remote add origin git@github.com:faker1708/diy.git
+git branch -M main
+git push -u origin main
+
+

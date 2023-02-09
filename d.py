@@ -66,7 +66,8 @@ if __name__ == "__main__":
     true_b = 4.2
 
     # 输入 输出
-    features, labels = synthetic_data(true_w, true_b, 1000)
+    example_count = 2**4  #数据的个数
+    features, labels = synthetic_data(true_w, true_b, example_count)
 
     print('features:', features[0],'\nlabel:', labels[0])
 
