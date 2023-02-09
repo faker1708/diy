@@ -14,7 +14,7 @@ def synthetic_data(w, b, num_examples):  #@save
     y = torch.matmul(X, w) + b
 
     # 均值 ，方差
-    average = 0
+    average = 1
     aa = 4
     variance = 2**(-aa)
 
