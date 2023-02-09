@@ -15,7 +15,7 @@ def synthetic_data(w, b, num_examples):  #@save
 
     # 均值 ，方差
     average = 0
-    aa = 5
+    aa = 4
     variance = 2**(-aa)
 
     nwg = torch.normal(average, variance, y.shape)   # 正态分布 高斯白噪声
@@ -56,15 +56,19 @@ def sgd(params, lr, batch_size):  #@save
     with torch.no_grad():
         for param in params:
 
-            
-            param -= lr * param.grad / batch_size
+
+            gvg =  param.grad / batch_size
+            offset = -lr * gvg
+            param += offset
+            # param -= lr * param.grad / batch_size
             param.grad.zero_()
 
 
 if __name__ == "__main__":
 
 
-    true_w = torch.tensor([2, -3.4])
+    # true_w = torch.tensor([2, -3.4])
+    true_w = torch.tensor([4.,2.,3.,1.])
     true_b = 4.2
 
     # 输入 输出
@@ -76,7 +80,7 @@ if __name__ == "__main__":
 
 
 
-    w = torch.normal(0, 0.01, size=(2,1), requires_grad=True)
+    w = torch.normal(0, 0.01, size=(4,1), requires_grad=True)
     b = torch.zeros(1, requires_grad=True)
 
 
@@ -156,5 +160,6 @@ if __name__ == "__main__":
     print(f'b的估计误差: {true_b - b}')
 
 
-
+    print(w)
+    print(true_w)
 
