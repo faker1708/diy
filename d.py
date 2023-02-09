@@ -5,7 +5,7 @@ print("线性回归的从零实现")
 import random
 import torch
 from d2l import torch as d2l
-
+import math
 
 
 def synthetic_data(w, b, num_examples):  #@save
@@ -15,7 +15,8 @@ def synthetic_data(w, b, num_examples):  #@save
 
     # 均值 ，方差
     average = 0
-    variance = 0.01
+    aa = 5
+    variance = 2**(-aa)
 
     y += torch.normal(average, variance, y.shape)
     return X, y.reshape((-1, 1))
@@ -66,13 +67,11 @@ if __name__ == "__main__":
     print('features:', features[0],'\nlabel:', labels[0])
 
 
-    d2l.set_figsize()
-    d2l.plt.scatter(features[:, 1].detach().numpy(), labels.detach().numpy(), 1);
+    # d2l.set_figsize()
+    # d2l.plt.scatter(features[:, 1].detach().numpy(), labels.detach().numpy(), 1);
 
 
 
-    batch_size = 1000
-    print("batch_size",batch_size)
 
     # for X, y in data_iter(batch_size, features, labels):
     #     print(X, '\n', y)
@@ -84,10 +83,11 @@ if __name__ == "__main__":
 
 
 
-    lr = 0.03
-    num_epochs = 300
+    batch_size = 2**4
+    lr = 0.03   # 学习率
+    num_epochs = 2**10   # 最大训练次数
     net = linreg
-    loss = squared_loss
+    loss = squared_loss     # 定义损失函数
 
 
     for epoch in range(num_epochs):
@@ -99,11 +99,21 @@ if __name__ == "__main__":
             sgd([w, b], lr, batch_size)  # 使用参数的梯度更新参数
         with torch.no_grad():
             train_l = loss(net(features, w, b), labels)
-            if(epoch%16 == 0):
-                print(f'epoch {epoch + 1}, loss {float(train_l.mean()):f}')
+            # if(epoch%16 == 0):
 
+                # print(f'epoch {epoch + 1}, loss {float(train_l.mean()):f}')
+            ll = math.log(train_l.mean())
+            ll = -int(ll)
 
+            precision = 9  # 对精度的要求
+            print(ll,end = ' ')
+            if(ll>=precision):
+                print("ok ",epoch)
+                break
+            # print('.',end='')
+            # print(train_l.mean())
 
+    print("batch_size",batch_size)
     print(f'w的估计误差: {true_w - w.reshape(true_w.shape)}')
     print(f'b的估计误差: {true_b - b}')
 
