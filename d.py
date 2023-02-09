@@ -90,6 +90,13 @@ if __name__ == "__main__":
     loss = squared_loss     # 定义损失函数
 
 
+    patience_ratio = 4  # 比如总数是1024 耐心率是 4 则 耐心度为 1024/4 = 256 当精度连续256次都没有升高时，认为孺子不可教，放弃训练
+    patience = num_epochs/patience_ratio
+
+    max_precision = 0   # 记录最大精度
+
+    pa_count = 0
+
     for epoch in range(num_epochs):
         for X, y in data_iter(batch_size, features, labels):
             l = loss(net(X, w, b), y)  # X和y的小批量损失
@@ -104,12 +111,26 @@ if __name__ == "__main__":
                 # print(f'epoch {epoch + 1}, loss {float(train_l.mean()):f}')
             ll = math.log(train_l.mean())
             ll = -int(ll)
+            now_precision = ll
 
-            precision = 9  # 对精度的要求
-            print(ll,end = ' ')
-            if(ll>=precision):
-                print("ok ",epoch)
+            demand_precision = 9  # 对精度的要求
+
+            if(now_precision > max_precision):
+                pa_count = 0 # 耐心恢复
+                max_precision = now_precision
+                print(now_precision)
+            else:
+                pa_count+=1
+                print(pa_count ,end =' ')
+            if(pa_count>=patience):
+                print('连续训练了',pa_count,'次都没有进展,学习中断,当前精度为',now_precision)
                 break
+            # print(now_precision,end = ' ')
+            if(now_precision>=demand_precision):
+                print("达到了目标精度,训练成本为",epoch)
+                break
+
+
             # print('.',end='')
             # print(train_l.mean())
 
