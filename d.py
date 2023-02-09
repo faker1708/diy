@@ -18,7 +18,9 @@ def synthetic_data(w, b, num_examples):  #@save
     aa = 5
     variance = 2**(-aa)
 
-    y += torch.normal(average, variance, y.shape)
+    nwg = torch.normal(average, variance, y.shape)   # 正态分布 高斯白噪声
+    # print(nwg)
+    y += nwg
     return X, y.reshape((-1, 1))
 
 
@@ -62,6 +64,8 @@ if __name__ == "__main__":
 
     true_w = torch.tensor([2, -3.4])
     true_b = 4.2
+
+    # 输入 输出
     features, labels = synthetic_data(true_w, true_b, 1000)
 
     print('features:', features[0],'\nlabel:', labels[0])
@@ -81,7 +85,7 @@ if __name__ == "__main__":
     loss = squared_loss     # 定义损失函数
 
 
-    patience_ratio = 2**0  # 比如总数是1024 耐心率是 4 则 耐心度为 1024/4 = 256 当精度连续256次都没有升高时，认为孺子不可教，放弃训练
+    patience_ratio = 2**4  # 比如总数是1024 耐心率是 4 则 耐心度为 1024/4 = 256 当精度连续256次都没有升高时，认为孺子不可教，放弃训练
     patience = num_epochs/patience_ratio
 
     max_precision = 0   # 记录最大精度
@@ -90,7 +94,8 @@ if __name__ == "__main__":
 
     for epoch in range(num_epochs):
         for X, y in data_iter(batch_size, features, labels):
-            l = loss(net(X, w, b), y)  # X和y的小批量损失
+            l = loss(net(X, w, b), 
+                                        y)  # X和y的小批量损失
             # 因为l形状是(batch_size,1)，而不是一个标量。l中的所有元素被加到一起，
             # 并以此计算关于[w,b]的梯度
             l.sum().backward()
