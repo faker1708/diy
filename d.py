@@ -86,7 +86,7 @@ if __name__ == "__main__":
 
 
 
-    batch_size = 2**4
+    batch_size = 2**4       # 每次吃几个数据
     lr = 0.03   # 学习率
     num_epochs = 2**10   # 最大训练次数
     net = linreg
@@ -114,7 +114,7 @@ if __name__ == "__main__":
             l.sum().backward()
             sgd([w, b], lr, batch_size)  # 使用参数的梯度更新参数
         with torch.no_grad():
-            train_l = loss(net(features, w, b), labels)
+            train_l = loss(net(features, w, b), labels)     # 用输入套公式，与实际的输出比较
             # if(epoch%16 == 0):
 
                 # print(f'epoch {epoch + 1}, loss {float(train_l.mean()):f}')
@@ -152,7 +152,7 @@ if __name__ == "__main__":
     print("")
     print("")
     print("")
-    print("学习成本",learn_count)
+    print("    学习成本",learn_count)
     print("有效学习成本",lce)
     print("当前误差",tlm)
     print("当前精度",now_precision)
@@ -164,3 +164,5 @@ if __name__ == "__main__":
     print(w)
     print(true_w)
 
+    print(b)
+    print(true_b)
