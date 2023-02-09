@@ -67,15 +67,6 @@ if __name__ == "__main__":
     print('features:', features[0],'\nlabel:', labels[0])
 
 
-    # d2l.set_figsize()
-    # d2l.plt.scatter(features[:, 1].detach().numpy(), labels.detach().numpy(), 1);
-
-
-
-
-    # for X, y in data_iter(batch_size, features, labels):
-    #     print(X, '\n', y)
-    #     break
 
 
     w = torch.normal(0, 0.01, size=(2,1), requires_grad=True)
@@ -90,7 +81,7 @@ if __name__ == "__main__":
     loss = squared_loss     # 定义损失函数
 
 
-    patience_ratio = 4  # 比如总数是1024 耐心率是 4 则 耐心度为 1024/4 = 256 当精度连续256次都没有升高时，认为孺子不可教，放弃训练
+    patience_ratio = 2**0  # 比如总数是1024 耐心率是 4 则 耐心度为 1024/4 = 256 当精度连续256次都没有升高时，认为孺子不可教，放弃训练
     patience = num_epochs/patience_ratio
 
     max_precision = 0   # 记录最大精度
@@ -109,31 +100,38 @@ if __name__ == "__main__":
             # if(epoch%16 == 0):
 
                 # print(f'epoch {epoch + 1}, loss {float(train_l.mean()):f}')
-            ll = math.log(train_l.mean())
-            ll = -int(ll)
-            now_precision = ll
+            tlm = train_l.mean()
+            ll = -math.log(tlm)
+            # print("ll ",ll)
+            ll = int(ll)
+            now_precision = ll      # 当前精度
 
-            demand_precision = 9  # 对精度的要求
+            demand_precision = 11  # 对精度的要求
 
             if(now_precision > max_precision):
+                # 学习有了进展
+                print(tlm)
                 pa_count = 0 # 耐心恢复
                 max_precision = now_precision
                 print(now_precision)
             else:
                 pa_count+=1
-                print(pa_count ,end =' ')
+                # print(pa_count ,end =' ')   
             if(pa_count>=patience):
                 print('连续训练了',pa_count,'次都没有进展,学习中断,当前精度为',now_precision)
+                print(tlm)
                 break
             # print(now_precision,end = ' ')
             if(now_precision>=demand_precision):
-                print("达到了目标精度,训练成本为",epoch)
+                print("达到了目标精度",demand_precision,",训练成本为",epoch)
                 break
 
 
             # print('.',end='')
             # print(train_l.mean())
 
+    print(tlm)
+    print(now_precision)
     print("batch_size",batch_size)
     print(f'w的估计误差: {true_w - w.reshape(true_w.shape)}')
     print(f'b的估计误差: {true_b - b}')
