@@ -10,7 +10,7 @@ def squared_loss(y_hat, y):  #@save
 
 def sgd(param, lr, batch_size):  #@save
     """小批量随机梯度下降"""
-    print("小批量随机梯度下降")
+    # print("小批量随机梯度下降")
     with torch.no_grad():
 
 
@@ -19,6 +19,7 @@ def sgd(param, lr, batch_size):  #@save
         param += offset
         # param -= lr * param.grad / batch_size
         param.grad.zero_()
+        
         w = param
         w[-1,0:-1]=0
         w[-1,-1]=1
@@ -48,6 +49,7 @@ if __name__ == "__main__":
     w = torch.randn(dim_w[0], dim_x, requires_grad=True)
     # w[dim_w[0]-1] = torch.zeros()
     with torch.no_grad():
+        w[1,1]=33
         w[-1,0:-1]=0
         w[-1,-1]=1
     # print(w)
@@ -69,18 +71,18 @@ if __name__ == "__main__":
 
 
 
-    for i in range(0,3):
+    for epoch in range(0,3):
         #x1
         x = torch.matmul(lw[0],lx[0])
         x = torch.clamp(x,min=0.0)
         # print(x)
-        lx.append(x)
+        # lx.append(x)
 
 
         # x2
-        x = torch.matmul(lw[1],lx[1])
+        x = torch.matmul(lw[1],x)
         x = torch.clamp(x,min=0.0)
-        lx.append(x)
+        # lx.append(x)
 
 
 
@@ -94,8 +96,9 @@ if __name__ == "__main__":
         # print("损失 l",l)
 
         ls = l.sum()
-        print(ls)
-        lsb = ls.backward()
+        print("损失",int(ls))
+        lsb = ls.backward(retain_graph=True)
+        # lsb = ls.backward()
         # print(lsb)
         # l.sum().backward()
         # print("损失 l",l)
@@ -125,7 +128,7 @@ if __name__ == "__main__":
         lr = 0.1
         bs = 1
         for i in range(len(lw)):
-            sgd(lw,lr,bs)
+            sgd(lw[i],lr,bs)
         # w = lw[-1]
         # sgd(w,lr,bs)
         
