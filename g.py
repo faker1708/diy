@@ -16,6 +16,8 @@ lx.append(x)
 
 w = torch.randn(dim_w[0], dim_x, requires_grad=True)
 # w[dim_w[0]-1] = torch.zeros()
+w[-1,:-1]=0
+print(w)
 lw.append(w)
 
 #x1
@@ -62,7 +64,7 @@ w = torch.randn(3, dim_x, requires_grad=True)
 # print(w)
 
 
-n=torch.FloatTensor(3,4).fill_(33)
-n[-1,0:-1]=0
-n[-1,-1] = 1
-print(n)
+# n=torch.FloatTensor(3,4).fill_(33)
+# n[-1,0:-1]=0
+# n[-1,-1] = 1
+# print(n)
