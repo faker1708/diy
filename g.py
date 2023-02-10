@@ -6,25 +6,27 @@ dim_y = 1
 
 dim_w = [4]
 lw = list()
+lx = list()
 
-x0 = torch.randn(2, 1)
+x = torch.randn(dim_x, 1)
+lx.append(x)
 
-
-w = torch.randn(dim_w[0], 2, requires_grad=True)
+w = torch.randn(dim_w[0], dim_x, requires_grad=True)
 lw.append(w)
 
-x1 = torch.matmul(lw[0],x0)
+x1 = torch.matmul(lw[0],lx[0])
 
+# w1
+w = torch.randn(dim_y,dim_w[0],requires_grad = True)
+x = torch.matmul(w,x1)
 
-w1 = torch.randn(1,4,requires_grad = True)
+c = torch.sum(x)
+lx.append(x)
 
-x2 = torch.matmul(w1,x1)
-
-c = torch.sum(x2)
 
 
 
 
 c.backward()
-print(w0.grad)
-print(w1.grad)
+print(lw[0].grad)
+print(lw[1].grad)
