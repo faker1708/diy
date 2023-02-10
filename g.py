@@ -1,70 +1,105 @@
 import torch
 
 
-dim_x = 2+1
-dim_y = 1+1
 
-dim_w = [4+1]
-lw = list()
-lx = list()
+def squared_loss(y_hat, y):  #@save
+    """均方损失"""
+    return (y_hat - y.reshape(y_hat.shape)) ** 2 / 2
 
 
-# x0
-x = torch.randn(dim_x, 1)
-x[dim_x-1]=1
-lx.append(x)
+if __name__ == "__main__":
 
-w = torch.randn(dim_w[0], dim_x, requires_grad=True)
-# w[dim_w[0]-1] = torch.zeros()
-w[-1,:-1]=0
-print(w)
-lw.append(w)
+    nn = torch
 
-#x1
-x = torch.matmul(lw[0],lx[0])
-x = torch.clamp(x,min=0.0)
-# print(x)
-lx.append(x)
+    dim_x = 2+1
+    dim_y = 1+1
 
-# w1
-w = torch.randn(dim_y,dim_w[0],requires_grad = True)
-lw.append(w)
-
-# x2
-x = torch.matmul(w,lx[-1])
-x = torch.clamp(x,min=0.0)
-lx.append(x)
+    dim_w = [4+1]
+    lw = list()
+    lx = list()
 
 
-c = torch.sum(lx[-1])
+    # x0
+    #x = torch.randn(dim_x, 1)
+    x = torch.tensor([0.,1.,1.])
+    y = torch.tensor([1.,1.])
+
+    x[dim_x-1]=1
+    lx.append(x)
+
+    w = torch.randn(dim_w[0], dim_x, requires_grad=True)
+    # w[dim_w[0]-1] = torch.zeros()
+    with torch.no_grad():
+        w[-1,0:-1]=0
+        w[-1,-1]=1
+    # print(w)
+    lw.append(w)
+
+    #x1
+    x = torch.matmul(lw[0],lx[0])
+    x = torch.clamp(x,min=0.0)
+    # print(x)
+    lx.append(x)
+
+    # w1
+    w = torch.randn(dim_y,dim_w[0],requires_grad = True)
+    with torch.no_grad():
+        w[-1,0:-1]=0
+        w[-1,-1]=1
+    lw.append(w)
+
+    # x2
+    x = torch.matmul(w,lx[-1])
+    x = torch.clamp(x,min=0.0)
+    lx.append(x)
 
 
-for i,ele in enumerate(lx):
-    print(ele)
+
+    # loss = nn.MSELoss()
+    loss = squared_loss
+    l = loss(lx[-1],y)
+    l.sum().backward()
+
+    #lx[-1].sum().backward()
+
+    # c = torch.sum(lx[-1])
 
 
+    print("打印w")
 
-c.backward()
-# print(lw[0].grad)
-# print(lw[1].grad)
+    for i,ele in enumerate(lw):
+        print(ele)
 
+    print("打印x")
 
-# a = torch.randn(5)
-# print(a)
-# a = torch.clamp(a,0.,100.)
-# print(a)
+    for i,ele in enumerate(lx):
+        print(ele)
 
-
-a = torch.zeros(3)
-print('a',a)
-
-w = torch.randn(3, dim_x, requires_grad=True)
-# w[-1,0:-2] = 0
-# w[-1,-1]=1
-# print(w)
+    print("打印梯度")
 
 
-# n=torch.FloatTensor(3,4).fill_(33)
-# n[-1,0:-1]=0
-# n[-1,-1] = 1
-# print(n)
+    # c.backward()
+    print(lw[0].grad)
+    print(lw[1].grad)
+
+
+    # a = torch.randn(5)
+    # print(a)
+    # a = torch.clamp(a,0.,100.)
+    # print(a)
+
+
+    # a = torch.zeros(3)
+    # print('a',a)
+
+    # w = torch.randn(3, dim_x, requires_grad=True)
+    # w[-1,0:-2] = 0
+    # w[-1,-1]=1
+    # print(w)
+
+
+    # n=torch.FloatTensor(3,4).fill_(33)
+    # n[-1,0:-1]=0
+    # n[-1,-1] = 1
+    # print(n)
+
