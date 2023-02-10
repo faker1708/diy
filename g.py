@@ -53,12 +53,7 @@ if __name__ == "__main__":
     # print(w)
     lw.append(w)
 
-    #x1
-    x = torch.matmul(lw[0],lx[0])
-    x = torch.clamp(x,min=0.0)
-    # print(x)
-    lx.append(x)
-
+    
     # w1
     w = torch.randn(dim_y,dim_w[0],requires_grad = True)
     with torch.no_grad():
@@ -66,57 +61,76 @@ if __name__ == "__main__":
         w[-1,-1]=1
     lw.append(w)
 
-    # x2
-    x = torch.matmul(w,lx[-1])
-    x = torch.clamp(x,min=0.0)
-    lx.append(x)
 
 
 
-    # loss = nn.MSELoss()
-
-    xn = lx[-1]
-    print('xn',xn)
-    loss = squared_loss
-    l = loss(xn,y)
-    print("损失 l",l)
-
-    ls = l.sum()
-    print(ls)
-    lsb = ls.backward()
-    print(lsb)
-    # l.sum().backward()
-    # print("损失 l",l)
-
-    #lx[-1].sum().backward()
-
-    # c = torch.sum(lx[-1])
 
 
-    print("打印w")
-
-    for i,ele in enumerate(lw):
-        print(ele)
-
-    print("打印x")
-
-    for i,ele in enumerate(lx):
-        print(ele)
-
-    print("打印梯度")
 
 
-    # c.backward()
-    print(lw[0].grad)
-    print(lw[1].grad)
 
-    lr = 0.1
-    bs = 1
-    w = lw[-1]
-    sgd(w,lr,bs)
-    
-    w = lw[-2]
-    sgd(w,lr,bs)
+    for i in range(0,3):
+        #x1
+        x = torch.matmul(lw[0],lx[0])
+        x = torch.clamp(x,min=0.0)
+        # print(x)
+        lx.append(x)
+
+
+        # x2
+        x = torch.matmul(lw[1],lx[1])
+        x = torch.clamp(x,min=0.0)
+        lx.append(x)
+
+
+
+        # loss = nn.MSELoss()
+
+        # xn = lx[-1]
+        xn = x
+        # print('xn',xn)
+        loss = squared_loss
+        l = loss(xn,y)
+        # print("损失 l",l)
+
+        ls = l.sum()
+        print(ls)
+        lsb = ls.backward()
+        # print(lsb)
+        # l.sum().backward()
+        # print("损失 l",l)
+
+        #lx[-1].sum().backward()
+
+        # c = torch.sum(lx[-1])
+
+
+        # print("打印w")
+
+        # for i,ele in enumerate(lw):
+        #     print(ele)
+
+        # print("打印x")
+
+        # for i,ele in enumerate(lx):
+        #     print(ele)
+
+        # print("打印梯度")
+
+
+        # # c.backward()
+        # print(lw[0].grad)
+        # print(lw[1].grad)
+
+        lr = 0.1
+        bs = 1
+        for i in range(len(lw)):
+            sgd(lw,lr,bs)
+        # w = lw[-1]
+        # sgd(w,lr,bs)
+        
+        # w = lw[-2]
+        # sgd(w,lr,bs)
 
 
     # a = torch.randn(5)
