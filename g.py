@@ -7,6 +7,23 @@ def squared_loss(y_hat, y):  #@save
     return (y_hat - y.reshape(y_hat.shape)) ** 2 / 2
 
 
+
+def sgd(param, lr, batch_size):  #@save
+    """小批量随机梯度下降"""
+    with torch.no_grad():
+
+
+        gvg =  param.grad / batch_size
+        offset = -lr * gvg
+        param += offset
+        # param -= lr * param.grad / batch_size
+        param.grad.zero_()
+        w = param
+        w[-1,0:-1]=0
+        w[-1,-1]=1
+
+        print(w)
+
 if __name__ == "__main__":
 
     nn = torch
@@ -81,6 +98,11 @@ if __name__ == "__main__":
     # c.backward()
     print(lw[0].grad)
     print(lw[1].grad)
+
+    lr = 0.1
+    bs = 1
+    w = lw[-1]
+    sgd(w,lr,bs)
 
 
     # a = torch.randn(5)
