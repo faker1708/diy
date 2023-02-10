@@ -3,6 +3,13 @@ import torch
 
 
 
-x = torch.randn(4, 2, requires_grad=True)
+w = torch.randn(4, 2, requires_grad=True)
+x0 = torch.randn(4, 2)
 
-print(x)
+
+x1 = w*x0
+
+print(x1)
+
+
+
